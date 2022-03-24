@@ -18,8 +18,8 @@ const accountApi = {
     const data = await axiosClient.get(url);
     return data.data;
   },
-  update(id, data) {
-    const url = `/seller/updateSeller/${id}`;
+  update(data) {
+    const url = `/seller/updateSeller/${data.id}`;
     return axiosClient.put(url, data);
   },
 

@@ -64,22 +64,26 @@ function AccountManagerPage(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+
   const handleUpdate = (row) => {
-    setOpen(true);
+    setOpenUpdate(true);
+    setId(row.id);
   };
+  const [id, setId] = useState();
 
   const updateSubmit = async (values) => {
-    await updateAccount(
-      { values },
-      {
-        onSuccess: () => {
-          enqueueSnackbar("Update successfully", { variant: "success" });
-        },
-        onError: (error) => {
-          enqueueSnackbar(error.message, { variant: "error" });
-        },
-      }
-    );
+    values = { ...values, id: id };
+    console.log(values);
+    await updateAccount(values, {
+      onSuccess: () => {
+        enqueueSnackbar("Update successfully", { variant: "success" });
+        setOpenUpdate(false);
+      },
+      onError: (error) => {
+        enqueueSnackbar(error.message, { variant: "error" });
+      },
+    });
   };
 
   const { data: response, isLoading } = useGetAllAccount();
@@ -202,7 +206,7 @@ function AccountManagerPage(props) {
                         </TableCell>
                       </TableRow>
                     </TableHead>
-                    <Dialog open={open}>
+                    <Dialog open={openUpdate}>
                       <div className="p-32">
                         <h1 className="flex  self-center">Update Account</h1>
                         <form onSubmit={form.handleSubmit(updateSubmit)}>
