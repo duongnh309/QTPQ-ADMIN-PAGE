@@ -2,13 +2,12 @@ import { axiosClient } from "./axiosClient";
 
 const menuApi = {
   async add(menu) {
-    const url = `/menu/create`;
-    axiosClient.post(url, menu);
-  },
-
-  async delete(menuId) {
-    const url = `/menu/delete/${menuId}`;
-    axiosClient.delete(url);
+    let url = "/menu/create?";
+    menu.selectedList.forEach((productId) => {
+      url += `productId=${productId}&`;
+    });
+    url = url.slice(0, -1);
+    axiosClient.post(url, menu.values);
   },
 
   async getAllAdmin() {

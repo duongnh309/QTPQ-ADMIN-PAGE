@@ -1,18 +1,13 @@
-import { Close } from "@material-ui/icons";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Box,
   Button,
-  CircularProgress,
-  Dialog,
-  IconButton,
+  CircularProgress, IconButton,
   makeStyles
 } from "@material-ui/core";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
-  Collapse,
-  DialogContent,
-  Paper,
+  Collapse, Paper,
   Table,
   TableBody,
   TableCell,
@@ -23,40 +18,20 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import { numberWithCommas } from "../../../../../components/helper";
 import useGetAllMenu from "../../hooks/use-get-all-menu";
 
-import CreateAMenu from "../CreateAMenu";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  link: {
-    color: "white",
-    textDecoration: "none",
-  },
 
-  closeButton: {
-    position: "absolute",
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-}));
 
 function MenuTable() {
   const [menu, setMenu] = useState("");
-  const classes = useStyles();
+  const history = useHistory();
+
   const { data, isLoading } = useGetAllMenu();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
-    setOpen(true);
+    history.push("/admin/menu/create-page");
   };
 
   const handleClose = () => {
@@ -285,26 +260,6 @@ function MenuTable() {
                         {data?.map((row) => (
                           <Row key={row.id} row={row} />
                         ))}
-                        <Dialog
-                          disableBackdropClick
-                          disableEscapeKeyDown
-                          open={open}
-                          onClose={handleClose}
-                          aria-labelledby="form-dialog-title"
-                        >
-                          <IconButton
-                            className={classes.closeButton}
-                            onClick={handleClose}
-                          >
-                            <Close />
-                          </IconButton>
-
-                          <DialogContent sx={{ width: "600px" }}>
-                            <>
-                              <CreateAMenu closeDialog={handleClose} />
-                            </>
-                          </DialogContent>
-                        </Dialog>
                       </TableBody>
 
                     </Table>
