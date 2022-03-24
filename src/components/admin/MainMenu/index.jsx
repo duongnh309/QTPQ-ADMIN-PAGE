@@ -67,17 +67,6 @@ function MainMenu(props) {
               Menu
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              className={classNames({
-                "active-menu": tab.includes("/admin/partner"),
-              })}
-              to="/admin/partner"
-            >
-              <MonetizationOnIcon sx={{ marginRight: 2 }} />
-              Partner
-            </NavLink>
-          </li>
         </ul>
       </div>
     </nav>

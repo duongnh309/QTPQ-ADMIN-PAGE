@@ -5,7 +5,7 @@ const useUpdateAccount = () => {
   return useMutation(
     "updateAccount",
     async (account) => {
-      return accountApi.updateStatus(account);
+      return accountApi.update(account);
     },
     {
       onSuccess: () => {
