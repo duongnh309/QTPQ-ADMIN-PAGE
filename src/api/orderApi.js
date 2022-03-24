@@ -1,9 +1,9 @@
 import { axiosClient } from "./axiosClient";
 
 const orderApi = {
-  async confirm(id) {
-    const url = `/order/confirm/${id}`;
-    axiosClient.put(url);
+  async setState(id, state) {
+    const url = `/order/updateOrderState/${id}?state=${state}`;
+    axiosClient.post(url);
   },
 
   async getAllAdmin() {

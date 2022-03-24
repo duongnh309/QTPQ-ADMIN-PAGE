@@ -1,10 +1,6 @@
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import {
   Box,
   CircularProgress,
-  Collapse,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -12,47 +8,38 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { numberWithCommas } from "../../../../../components/helper";
 import useGetAllOrders from "../../hooks/use-get-all-orders";
-import useGetOrderDetail from "../../hooks/use-get-detail";
+import useUpdateState from "../../hooks/use-update-state";
 
 function OrdersTable() {
   const [orderId, setOrderId] = useState(null);
 
+  const { mutate: updateState } = useUpdateState();
   const { data: response, isLoading } = useGetAllOrders();
-  const { data: details, isLoadingDetail } = useGetOrderDetail(orderId);
 
   console.log(response, "Orders");
-  console.log(details, "Details");
 
   //Search sp
   const form = useForm();
+
+  const handleNumberOfRecords = (e) => {
+    const id = e.target[e.target.selectedIndex].getAttribute("orderId");
+    const state = e.target[e.target.selectedIndex].getAttribute("value");
+
+    updateState({ id, state });
+  };
 
   //Xu ly so sp hien thi tren table
 
   function Row(props) {
     const { row } = props;
-    const [open, setOpen] = React.useState(false);
 
     return (
-      <React.Fragment>
+      <>
         <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => {
-                setOpen(!open);
-                setOrderId(row.order_id);
-              }}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
           <TableCell sx={{ fontSize: 12 }} component="th" scope="row">
             {row.order_id}
           </TableCell>
@@ -66,81 +53,45 @@ function OrdersTable() {
             {row.phone}
           </TableCell>
           <TableCell sx={{ fontSize: 12 }} align="left">
+            {row.state}
+          </TableCell>
+          <TableCell sx={{ fontSize: 12 }} align="left">
             {row.locationName}
           </TableCell>
           <TableCell sx={{ fontSize: 12 }} align="left">
             {row.totalPrice}
           </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              {!details ? (
-                <Box sx={{ display: "flex" }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <Box sx={{ margin: 1 }}>
-                  <Typography
-                    sx={{ fontSize: 16, fontWeight: "bold" }}
-                    variant="h6"
-                    gutterBottom
-                    component="div"
-                  >
-                    Detail
-                  </Typography>
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
-                          align="left"
-                        >
-                          Size
-                        </TableCell>
-                        <TableCell
-                          sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
-                          align="left"
-                        >
-                          Quantity
-                        </TableCell>
-                        <TableCell
-                          sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
-                          align="left"
-                        >
-                          Sum
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {details?.map((detail) => (
-                        <>
-                          <TableRow>
-                            <TableCell
-                              sx={{ fontSize: 14 }}
-                              component="th"
-                              scope="row"
-                            ></TableCell>
-                            <TableCell sx={{ fontSize: 14 }}>
-                              {detail?.customerName}
-                            </TableCell>
-                            <TableCell sx={{ fontSize: 14 }} align="left">
-                              {detail?.menuId}
-                            </TableCell>
-                            <TableCell sx={{ fontSize: 14 }} align="left">
-                              {detail?.roomNumber}
-                            </TableCell>
-                          </TableRow>
-                        </>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
-              )}
-            </Collapse>
+          <TableCell>
+            <div
+              className="dataTables_info w-1/5"
+              id="dataTables-example_info"
+              role="alert"
+              aria-live="polite"
+              aria-relevant="all"
+            >
+              <label>
+                <select
+                  onChange={handleNumberOfRecords}
+                  name="records"
+                  aria-controls="dataTables-example"
+                  className="form-control input-sm"
+                >
+                  <option orderId={row.order_id}> </option>
+                  <option value="DELIVERY" orderId={row.order_id}>
+                    DELIVERY
+                  </option>
+                  <option value="SUCCESS" orderId={row.order_id}>
+                    SUCCESS
+                  </option>
+                  <option value="CANCEL" orderId={row.order_id}>
+                    CANCEL
+                  </option>
+                </select>
+              </label>
+            </div>
           </TableCell>
         </TableRow>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -178,7 +129,6 @@ function OrdersTable() {
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{ width: 100 }} />
                           <TableCell
                             sx={{
                               width: 50,
@@ -221,6 +171,16 @@ function OrdersTable() {
                           </TableCell>
                           <TableCell
                             sx={{
+                              width: 50,
+                              color: "text.primary",
+                              fontSize: 14,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            State
+                          </TableCell>
+                          <TableCell
+                            sx={{
                               width: 150,
                               color: "text.primary",
                               fontSize: 14,
@@ -238,6 +198,16 @@ function OrdersTable() {
                             }}
                           >
                             Total bill(Vnđ)
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              width: 50,
+                              color: "text.primary",
+                              fontSize: 14,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Update State
                           </TableCell>
                         </TableRow>
                       </TableHead>
