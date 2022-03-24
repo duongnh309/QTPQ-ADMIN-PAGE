@@ -16,15 +16,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useSnackbar } from "notistack";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { numberWithCommas } from "../../../../../components/helper";
 import Pagination from "../../../../../components/Pagination";
-import useDeleteProduct from "../../hooks/use-delete-product";
 import useGetAllProducts from "../../hooks/use-get-all-products";
-import useUnDeleteProduct from "../../hooks/use-undelete-product";
 import CreateAProduct from "../../pages/CreateAProduct";
 MainTable.propTypes = {};
 
