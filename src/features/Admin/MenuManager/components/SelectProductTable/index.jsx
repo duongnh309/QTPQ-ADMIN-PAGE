@@ -190,7 +190,7 @@ function SelectProductTable({ selected, setSelected }) {
                                         <Pagination
                                             filter={filter}
                                             setFilter={setFilter}
-                                            total={response?.totalPage}
+                                            total={response?.totalPages}
                                         />
                                     </div>
                                 </div>
