@@ -4,7 +4,7 @@ import {
   CircularProgress,
   Dialog,
   IconButton,
-  makeStyles,
+  makeStyles
 } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import LoupeIcon from "@mui/icons-material/Loupe";
@@ -63,12 +63,10 @@ function MainTable() {
     category: "",
     price: "",
   });
-  const { enqueueSnackbar } = useSnackbar();
+
   const { data: response, isLoading } = useGetAllProducts(filter);
   // const { data: categories, isLoading: isLoadCategories } =
   //   useAdminCategories();
-  const { mutate: deleteProduct } = useDeleteProduct();
-  const { mutate: unDeleteProduct } = useUnDeleteProduct();
 
   const [open, setOpen] = useState(false);
   const history = useHistory();
