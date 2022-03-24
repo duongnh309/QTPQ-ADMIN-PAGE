@@ -27,7 +27,6 @@ function MyDatePicker({ form, name, label, disabled, placeholder }) {
                         labelId="demo-simple-select-label"
                         renderInput={(params) => <TextField {...params} />}
                         placeholder={placeholder}
-                        fullWidth
                         disabled={disabled}
                         error={hasError}
                         variant="outlined"
