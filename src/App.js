@@ -1,16 +1,14 @@
-import { Box, Grid } from '@material-ui/core';
-import { Skeleton } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router';
-import './App.css';
-import MainMenu from './components/admin/MainMenu';
-import ProductManagerFeature from './features/Admin/ProductManager';
+import { Box, Grid } from "@material-ui/core";
+import { Skeleton } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Route, Switch } from "react-router";
+import "./App.css";
+import MainMenu from "./components/admin/MainMenu";
+import ProductManagerFeature from "./features/Admin/ProductManager";
 import NavHeader from "./components/admin/NavHeader";
 import AccountManagerFeature from "./features/Admin/AccountManager";
 import OrderManegerFeature from "./features/Admin/OrderManager";
-
-
-
+import MenuManegerFeature from "./features/Admin/MenuManager";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -29,18 +27,10 @@ function App() {
                   {/* <Grid ><Skeleton variant='rect' width={270} height={900}></Skeleton></Grid> */}
                   <Grid item>
                     <Box marginLeft={8} marginBottom={2}>
-                      <Skeleton
-                        variant="circle"
-                        width={160}
-                        height={160}
-                      />
+                      <Skeleton variant="circle" width={160} height={160} />
                     </Box>
                     <Box marginBottom={1}>
-                      <Skeleton
-                        variant="rect"
-                        width={260}
-                        height={70}
-                      />
+                      <Skeleton variant="rect" width={260} height={70} />
                     </Box>
                     <Skeleton variant="rect" width={260} height={70} />
                   </Grid>
@@ -77,17 +67,18 @@ function App() {
                   path="/admin/orders"
                   component={OrderManegerFeature}
                 ></Route>
+                <Route
+                  path="/admin/menu"
+                  component={MenuManegerFeature}
+                ></Route>
               </Switch>
               {/* </NotiProvider> */}
             </div>
           )}
         </div>
-
-
       </header>
     </div>
   );
 }
-
 
 export default App;
