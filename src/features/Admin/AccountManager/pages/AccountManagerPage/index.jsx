@@ -1,4 +1,14 @@
-import { Box, CircularProgress, Dialog, DialogTitle } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,12 +22,43 @@ import { useForm } from "react-hook-form";
 import InputField from "../../../../../components/form-control/InputField";
 import useGetAllAccount from "../../hooks/useGetAllAccount";
 import useUpdateAccount from "../../hooks/useUpdateAccount";
+import CreateASeller from "../CreateASeller";
 
 AccountManagerPage.propTypes = {};
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  link: {
+    color: "white",
+    textDecoration: "none",
+  },
+
+  closeButton: {
+    position: "absolute",
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+}));
 
 function AccountManagerPage(props) {
   const form = useForm();
   const { handleSubmit, register } = form;
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const classes = useStyles();
 
   const { mutate: updateAccount } = useUpdateAccount();
   const { enqueueSnackbar } = useSnackbar();
@@ -51,6 +92,19 @@ function AccountManagerPage(props) {
           <div className="panel-body">
             <div className="table-responsive">
               <div className="flex justify-between flex-wrap-reverse">
+                <div className=" ">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleOpen}
+                    className="btn icon-btn btn-success bg-red-400"
+                  >
+                    {" "}
+                    <span className="glyphicon btn-glyphicon glyphicon-plus img-circle text-success" />
+                    Create new seller account{" "}
+                  </Button>
+                  <div className="dataTables_length ml-12"></div>
+                </div>
                 <div className=" flex flex-wrap">
                   <form className="shrink-0">
                     <div className="dataTables_filter"></div>
@@ -146,16 +200,6 @@ function AccountManagerPage(props) {
                         >
                           Edit
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            width: 100,
-                            color: "text.primary",
-                            fontSize: 14,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Delete
-                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <Dialog open={open}>
@@ -230,18 +274,29 @@ function AccountManagerPage(props) {
                                 Edit
                               </button>
                             </TableCell>
-                            <TableCell sx={{ fontSize: 12 }} align="left">
-                              <button
-                                onClick={() => handleUpdate(row.id, false)}
-                                className="btn btn-danger"
-                              >
-                                {" "}
-                                Delete
-                              </button>
-                            </TableCell>
                           </TableRow>
                         );
                       })}
+                      <Dialog
+                        disableBackdropClick
+                        disableEscapeKeyDown
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="form-dialog-title"
+                      >
+                        <IconButton
+                          className={classes.closeButton}
+                          onClick={handleClose}
+                        >
+                          <Close />
+                        </IconButton>
+
+                        <DialogContent sx={{ width: "600px" }}>
+                          <>
+                            <CreateASeller closeDialog={handleClose} />
+                          </>
+                        </DialogContent>
+                      </Dialog>
                     </TableBody>
                   </Table>
                 </TableContainer>
