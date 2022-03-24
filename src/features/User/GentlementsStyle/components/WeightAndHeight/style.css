@@ -1,0 +1,9 @@
+.inputs{
+    display: flex;
+    background-color: red;
+    justify-content: space-between;
+}
+
+.height_weight{
+    margin-bottom: 4vh;
+}

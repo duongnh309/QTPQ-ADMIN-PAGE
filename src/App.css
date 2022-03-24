@@ -1,4 +1,5 @@
 .App {
+  font-family: "Dosis", sans-serif;
   text-align: center;
 }
 
@@ -35,4 +36,83 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.slider {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  object-fit: cover;
+  width: 100vw;
+  height: 100%;
+}
+
+.right-arrow {
+  position: absolute;
+  top: 50%;
+  right: 32px;
+  font-size: 3rem;
+  color: antiquewhite;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+}
+
+.left-arrow {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  font-size: 3rem;
+  color: antiquewhite;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+}
+
+.slide {
+  opacity: 0;
+  transition-duration: 1s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  transition-duration: 1s;
+  transform: scale(1.08);
+}
+
+.detail-slider {
+  position: relative;
+}
+
+.detail-image {
+  object-fit: cover;
+  height: 600px;
+}
+
+.detail-right-arrow {
+  position: absolute;
+  top: 50%;
+  right: 32px;
+  font-size: 3rem;
+  color: antiquewhite;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+}
+
+.detail-left-arrow {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  font-size: 3rem;
+  color: antiquewhite;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
 }
