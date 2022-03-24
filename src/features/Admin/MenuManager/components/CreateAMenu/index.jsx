@@ -1,12 +1,13 @@
 import { useSnackbar } from "notistack";
 import React from "react";
-import useCreateProduct from "../../hooks/use-create-product";
+import useCreateMenu from "../../hooks/use-get-detail";
+
 import CreateMenuForm from "../CreateMenuForm";
 
 CreateAMenu.propTypes = {};
 
 function CreateAMenu(props) {
-  const { mutate: createProduct } = useCreateProduct();
+  const { mutate: createProduct } = useCreateMenu();
   const { closeDialog } = props;
   const { enqueueSnackbar } = useSnackbar();
   const handleSubmit = async (values) => {

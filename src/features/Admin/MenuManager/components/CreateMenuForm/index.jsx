@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Avatar, LinearProgress, MenuItem } from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
+import { LinearProgress, MenuItem } from "@material-ui/core";
 import { FormHelperText, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState } from "react";

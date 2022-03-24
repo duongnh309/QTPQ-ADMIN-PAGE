@@ -1,10 +1,18 @@
-import { useQuery } from "react-query";
-import orderApi from "../../../../api/orderApi";
-const useGetOrderDetail = (id) => {
-  return useQuery([`ordersDetail`, id], async () => {
-    console.log("vo roi nee");
-    return orderApi.getOrderDetail(id);
-  });
+import { useMutation, useQueryClient } from "react-query";
+import menuApi from "../../../../api/menuApi";
+const useCreateMenu = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    "createMenu",
+    async (menu) => {
+      return menuApi.add(menu);
+    },
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries("menus");
+      },
+    }
+  );
 };
 
-export default useGetOrderDetail;
+export default useCreateMenu;
