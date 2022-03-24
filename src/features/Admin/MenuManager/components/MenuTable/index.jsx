@@ -51,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MenuTable() {
-  const [orderId, setOrderId] = useState("");
+  const [menu, setMenu] = useState("");
   const classes = useStyles();
-  const { data: response, isLoading } = useGetAllMenu();
+  const { data, isLoading } = useGetAllMenu();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -80,7 +80,7 @@ function MenuTable() {
               size="small"
               onClick={() => {
                 setOpen(!open);
-                setOrderId(row.id);
+                setMenu(row.id);
               }}
             >
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -122,13 +122,25 @@ function MenuTable() {
                         sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
                         align="left"
                       >
+                        ID
+                      </TableCell>
+                      <TableCell
+                        sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
+                        align="left"
+                      >
                         Image
                       </TableCell>
                       <TableCell
                         sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
                         align="left"
                       >
-                        Size
+                        Name
+                      </TableCell>
+                      <TableCell
+                        sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
+                        align="left"
+                      >
+                        Unit price
                       </TableCell>
                       <TableCell
                         sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
@@ -136,37 +148,34 @@ function MenuTable() {
                       >
                         Quantity
                       </TableCell>
-                      <TableCell
-                        sx={{ width: 300, fontSize: 14, fontWeight: "bold" }}
-                        align="left"
-                      >
-                        Sum
-                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {row.products?.map((detail) => (
                       <>
                         <TableRow>
+                          <TableCell sx={{ fontSize: 14 }}>
+                            {detail?.id}
+                          </TableCell>
                           <TableCell
                             sx={{ fontSize: 14 }}
                             component="th"
                             scope="row"
                           >
                             <img
-                              className="h-96"
-                              src={detail?.productImage}
+                              className="h-80"
+                              src={detail?.imgLink}
                               alt="image1"
                             />
                           </TableCell>
                           <TableCell sx={{ fontSize: 14 }}>
-                            {detail?.size}
+                            {detail?.productName}
+                          </TableCell>
+                          <TableCell sx={{ fontSize: 14 }}>
+                            {numberWithCommas(detail?.unitPrice)}
                           </TableCell>
                           <TableCell sx={{ fontSize: 14 }} align="left">
-                            {detail?.quantity}
-                          </TableCell>
-                          <TableCell sx={{ fontSize: 14 }} align="left">
-                            {numberWithCommas(detail?.price)}
+                            {detail?.quanlity}
                           </TableCell>
                         </TableRow>
                       </>
@@ -188,7 +197,7 @@ function MenuTable() {
           {/* Advanced Tables */}
           <div className="panel panel-default ">
             <div className="panel-heading">Menu</div>
-            {!isLoading && !response.data ? (
+            {!isLoading && !data ? (
               "There no menus for this user"
             ) : (
               <div className="panel-body">
@@ -203,7 +212,7 @@ function MenuTable() {
                       >
                         {" "}
                         <span className="glyphicon btn-glyphicon glyphicon-plus img-circle text-success" />
-                        Create a new product{" "}
+                        Create a new menu{" "}
                       </Button>
                       <div className="dataTables_length ml-12"></div>
                     </div>
@@ -273,7 +282,7 @@ function MenuTable() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {response?.data.map((row) => (
+                        {data?.map((row) => (
                           <Row key={row.id} row={row} />
                         ))}
                         <Dialog

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import MyDatePicker from "../../../../../components/form-control/DatePicker";
 import InputField from "../../../../../components/form-control/InputField";
 import SelectField from "../../../../../components/form-control/SelectField";
 import TextAreaField from "../../../../../components/form-control/TextAreaField";
@@ -16,73 +17,37 @@ CreateMenuForm.propTypes = {
 };
 
 function CreateMenuForm({ onSubmit }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const defaultDate = new Date((1000 * 60 * 60 * 24) * 10 + new Date().getTime()).toISOString().slice(0, 10);
   const schema = yup.object().shape({
     menuName: yup
       .string()
       .trim("Không đúng format tên")
       .required("Please enter product name!"),
-    endDate: yup.number().min(0),
-    startDate: yup.number().min(0),
+    endDate: yup.date(),
+    startDate: yup.date().min(today, 'Không được chọn ngày trong quá khứ'),
     description: yup.string().required("Please enter the description!"),
-    categoryName: yup.string(),
-    img: yup.string().required("Vui lòng chọn hình ảnh"),
+    status: yup.string().required("Please enter the status!"),
   });
 
   const form = useForm({
     defaultValues: {
-      productName: "",
-      unitPrice: 0,
-      quanlity: 0,
+      menuName: "",
+      endDate: defaultDate,
+      startDate: today,
       description: "",
-      categoryName: "",
-      img: "",
+      status: "",
     },
     resolver: yupResolver(schema),
   });
-  console.log(form.formState.errors, "Valid form");
-  const [images, setImages] = useState(null);
-  const handleChange = (e) => {
-    clearErrors(["images"]);
-    const newImage = e.target.files[0];
-    newImage["id"] = Math.random();
-    setImages(newImage);
-  };
 
-  const { data: categories, isLoading } = useCustomerCategories();
   const handleSubmit = (values) => {
-    if (images.length === 0) {
-      throw new Error("Cannot do this");
-    }
 
-    console.log(
-      values,
-      "This is valueeeeeeeeeeeeeeeeeeee ---------------------"
-    );
-    const uploadTask = storage.ref(`images/${images.name}`).put(images);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-      },
-      (error) => {
-        console.log(error);
-      },
-      async () => {
-        await storage
-          .ref("images")
-          .child(images.name)
-          .getDownloadURL()
-          .then((url) => {
-            onSubmit({
-              ...values,
-              categories: { categoryName: values.categoryName },
-              img: url,
-            });
-          });
-      }
-    );
+    onSubmit({
+      ...values,
+      partnerTypeId: 1
+    });
+
   };
 
   const { register, formState, clearErrors } = form;
@@ -92,60 +57,13 @@ function CreateMenuForm({ onSubmit }) {
     <div>
       {isSubmitting && <LinearProgress />}
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="productName" label="Name" form={form} />
-        <InputField name="unitPrice" label="Price" form={form} />
-        <InputField name="quanlity" label="Quanlity" form={form} />
+        <InputField name="menuName" label="Menu name" form={form} />
+        <MyDatePicker name="startDate" label="Start Date" form={form} />
+        <MyDatePicker name="endDate" label="End Date" form={form} />
         <TextAreaField name="description" label="Description" form={form} />
-        <SelectField
-          name="categoryName"
-          label="Category"
-          form={form}
-          rows={categories?.data.map((x, i) => {
-            if (!x.deleted)
-              return (
-                <MenuItem value={x.categoryName}>{x.categoryName}</MenuItem>
-              );
-          })}
-        />
-        <Typography variant="h5" mt={4}>
-          Select Images (Thumbnail ) :{" "}
-        </Typography>
-
-        {formState.errors["img"]?.message && (
-          <FormHelperText sx={{ fontSize: 12, paddingTop: 0 }} error>
-            {formState.errors["img"]?.message}{" "}
-          </FormHelperText>
-        )}
-
-        <input
-          name="img"
-          {...register("img")}
-          type="file"
-          multiple
-          id="my-img"
-          onChange={handleChange}
-        />
-        {/* <img src={image} style={{ width: '180px', height: '100px' }} /> */}
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <>
-          <p>Thumbnail(*)</p>
-          {images && (
-            <img
-              className="m-5"
-              style={{ width: "500px" }}
-              src={
-                URL.createObjectURL(images) || "http://via.placeholder.com/300"
-              }
-              alt="firebase"
-            />
-          )}
-        </>
+        <InputField name="status" label="Status" form={form} />
         <button className="btn btn-primary" type="submit">
-          <i className="fa fa-edit"></i> Create New Product
+          <i className="fa fa-edit"></i> Create New Menu
         </button>
       </form>
     </div>
