@@ -20,7 +20,7 @@ const productApi = {
   },
 
   async update(data) {
-    const url = `/product/update/${data.id}`;
+    const url = `/product/update/?productID=${data.id}`;
     return await axiosClient.put(url, data);
   },
 

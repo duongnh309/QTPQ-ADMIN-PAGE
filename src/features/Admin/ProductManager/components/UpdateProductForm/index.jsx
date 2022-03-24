@@ -53,6 +53,7 @@ function UpdateProductForm({ onSubmit, updateProduct, onNotEdit }) {
     },
     resolver: yupResolver(schema),
   });
+  console.log(form.formState.values, "Valid form");
   // const [error, setError] = useState(false);
   const { register, formState } = form;
 
@@ -62,14 +63,9 @@ function UpdateProductForm({ onSubmit, updateProduct, onNotEdit }) {
   // const { data: discounts, isLoading: isLoadingDiscounts } = useGetAllDiscount();
 
   const handleChange = (e) => {
-    // setError('');
-    const newImagesList = [];
-    for (let i = 0; i < e.target.files.length; i++) {
-      const newImage = e.target.files[i];
-      newImage["id"] = Math.random();
-      newImagesList.push(newImage);
-    }
-    setImages(newImagesList);
+    const newImage = e.target.files[0];
+    newImage["id"] = Math.random();
+    setImages(newImage);
   };
 
   const handleSubmit = (values) => {
@@ -79,46 +75,32 @@ function UpdateProductForm({ onSubmit, updateProduct, onNotEdit }) {
       ...values,
       id: updateProduct.id,
     };
-    if (images.length !== 0) {
-      const imagesList = [];
-      images.map((image) => {
-        const uploadTask = storage.ref(`images/${image.name}`).put(image);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            );
-            setProgress(progress);
-          },
-          (error) => {
-            console.log(error);
-          },
-          async () => {
-            await storage
-              .ref("images")
-              .child(image.name)
-              .getDownloadURL()
-              .then((url) => {
-                imagesList.push(url);
-                if (imagesList.length === images.length) {
-                  console.log(images.length, "imagesss");
-                  if (imagesList.length === 1)
-                    onSubmit({
-                      ...values,
-                      imgLink: imagesList[0],
-                    });
-                }
-              });
-          }
+    const uploadTask = storage.ref(`images/${images.name}`).put(images);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-      });
-    } else {
-      onSubmit({
-        ...values,
-        img: updateProduct.image,
-      });
-    }
+        setProgress(progress);
+      },
+      (error) => {
+        console.log(error);
+      },
+      async () => {
+        await storage
+          .ref("images")
+          .child(images.name)
+          .getDownloadURL()
+          .then((url) => {
+            onSubmit({
+              ...values,
+              categories: { categoryName: values.categoryName },
+              img: url,
+            });
+          });
+      }
+    );
   };
 
   return (
@@ -132,11 +114,11 @@ function UpdateProductForm({ onSubmit, updateProduct, onNotEdit }) {
           </div>
           <div className="row my-5">
             <div className="col-lg-5 col-sm-6 mx-4">
-              <InputField name="name" label="Name" form={form} />
+              <InputField name="productName" label="Name" form={form} />
             </div>
             <div className="col-lg-5 col-sm-6 mx-4">
               <SelectField
-                name="categoryId"
+                name="categoryName"
                 label="Category"
                 form={form}
                 rows={categories?.data.map((x, i) => {
@@ -195,22 +177,17 @@ function UpdateProductForm({ onSubmit, updateProduct, onNotEdit }) {
                 onChange={handleChange}
               />
               <div className="flex">
-                {images &&
-                  images.map((url, i) => (
-                    <div className="flex flex-wrap m-5">
-                      {i === 0 && <p>Image</p>}
-                      <img
-                        className=""
-                        key={i}
-                        style={{ width: "300px" }}
-                        src={
-                          URL.createObjectURL(url) ||
-                          "http://via.placeholder.com/300"
-                        }
-                        alt="firebase"
-                      />
-                    </div>
-                  ))}
+                {images && (
+                  <img
+                    className=""
+                    style={{ width: "300px" }}
+                    src={
+                      URL.createObjectURL(images) ||
+                      "http://via.placeholder.com/300"
+                    }
+                    alt="firebase"
+                  />
+                )}
               </div>
             </div>
           </div>
